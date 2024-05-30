@@ -33,30 +33,44 @@ public class AccountController extends BaseController {
     private EmailCodeService emailCodeService;
 
     /**
-     * @Description: 验证码
-     * @auther: laoluo
-     * @date: 17:28 2022/11/20
-     * @param: [request, response, session]
-     * @return: void
+     * 生成验证码（写入响应体）
+     * @param response
+     * @param session
+     * @param type
+     * @throws IOException
      */
     @RequestMapping(value = "/checkCode")
     public void checkCode(HttpServletResponse response, HttpSession session, Integer type) throws
             IOException {
         CreateImageCode vCode = new CreateImageCode(130, 38, 5, 10);
+
+        //设置响应头，禁止浏览器进行缓存。
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
+        //规定传输格式为图片
         response.setContentType("image/jpeg");
         String code = vCode.getCode();
+
+        //如果验证码类型为0（登录注册），就存储k:check_code_key，v:code
         if (type == null || type == 0) {
             session.setAttribute(Constants.CHECK_CODE_KEY, code);
         } else {
+            // //如果验证码类型不为0（获取邮箱），就存储k:check_code_key_email，v:code
             session.setAttribute(Constants.CHECK_CODE_KEY_EMAIL, code);
         }
+        //写入响应体
         vCode.write(response.getOutputStream());
     }
 
-
+    /**
+     * 发送邮箱验证码
+     * @param session
+     * @param email
+     * @param checkCode
+     * @param type
+     * @return
+     */
     @RequestMapping("/sendEmailCode")
     @GlobalInterceptor(checkParams = true)
     public ResponseVO sendEmailCode(HttpSession session,
@@ -74,6 +88,16 @@ public class AccountController extends BaseController {
         }
     }
 
+    /**
+     * 用户注册
+     * @param session
+     * @param email
+     * @param nickName
+     * @param password
+     * @param checkCode
+     * @param emailCode
+     * @return
+     */
     @RequestMapping("/register")
     @GlobalInterceptor(checkParams = true)
     public ResponseVO register(HttpSession session,
@@ -83,10 +107,13 @@ public class AccountController extends BaseController {
                                @VerifyParam(required = true) String checkCode,
                                @VerifyParam(required = true) String emailCode) {
         try {
+            //根据key校验验证码
             if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
                 throw new BusinessException("图片验证码不正确");
             }
+            //调用regiser方法
             userInfoService.register(email, nickName, password, emailCode);
+            //返回空实体类
             return getSuccessResponseVO(null);
         } finally {
             session.removeAttribute(Constants.CHECK_CODE_KEY);
@@ -94,11 +121,13 @@ public class AccountController extends BaseController {
     }
 
     /**
-     * @Description: 登录
-     * @auther: laoluo
-     * @date: 17:34 2022/11/20
-     * @param: [session, account, password, checkCode]
-     * @return: com.easybbs.entity.vo.ResponseVO
+     * 用户登录
+     * @param session
+     * @param request
+     * @param email
+     * @param password
+     * @param checkCode
+     * @return
      */
     @RequestMapping("/login")
     @GlobalInterceptor(checkParams = true)
@@ -107,9 +136,11 @@ public class AccountController extends BaseController {
                             @VerifyParam(required = true) String password,
                             @VerifyParam(required = true) String checkCode) {
         try {
+            //校验邮箱验证码
             if (!checkCode.equalsIgnoreCase((String) session.getAttribute(Constants.CHECK_CODE_KEY))) {
                 throw new BusinessException("图片验证码不正确");
             }
+            //封装返回用户实体
             SessionWebUserDto sessionWebUserDto = userInfoService.login(email, password, getIpAddr(request));
             session.setAttribute(Constants.SESSION_KEY, sessionWebUserDto);
             return getSuccessResponseVO(sessionWebUserDto);
@@ -118,6 +149,15 @@ public class AccountController extends BaseController {
         }
     }
 
+    /**
+     * 重新设置密码
+     * @param session
+     * @param email
+     * @param password
+     * @param checkCode
+     * @param emailCode
+     * @return
+     */
     @RequestMapping("/resetPwd")
     @GlobalInterceptor(checkParams = true)
     public ResponseVO resetPwd(HttpSession session,
@@ -136,6 +176,11 @@ public class AccountController extends BaseController {
         }
     }
 
+    /**
+     * 获取用户信息
+     * @param session
+     * @return
+     */
     @RequestMapping("/getUserInfo")
     @GlobalInterceptor
     public ResponseVO getUserInfo(HttpSession session) {
@@ -143,13 +188,24 @@ public class AccountController extends BaseController {
         return getSuccessResponseVO(sessionWebUserDto);
     }
 
+    /**
+     * 用户退出
+     * @param session
+     * @return
+     */
     @RequestMapping("/logout")
     public ResponseVO logout(HttpSession session) {
+        //使得会话内容失效
         session.invalidate();
+
         return getSuccessResponseVO(null);
     }
 
 
+    /**
+     * 获得设置
+     * @return
+     */
     @RequestMapping("/getSysSetting")
     @GlobalInterceptor()
     public ResponseVO getSysSetting() {

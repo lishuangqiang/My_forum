@@ -26,13 +26,7 @@ public class LoginController extends BaseController {
     private AdminConfig adminConfig;
 
 
-    /**
-     * @Description: 验证码
-     * @auther: laoluo
-     * @date: 17:28 2022/11/20
-     * @param: [request, response, session]
-     * @return: void
-     */
+
     @RequestMapping(value = "/checkCode")
     public void checkCode(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws
             IOException {
@@ -46,13 +40,7 @@ public class LoginController extends BaseController {
         vCode.write(response.getOutputStream());
     }
 
-    /**
-     * @Description: 登录
-     * @auther: laoluo
-     * @date: 17:34 2022/11/20
-     * @param: [session, account, password, checkCode]
-     * @return: com.easybbs.entity.vo.ResponseVO
-     */
+
     @RequestMapping("/login")
     @GlobalInterceptor(checkParams = true)
     public ResponseVO login(HttpSession session,

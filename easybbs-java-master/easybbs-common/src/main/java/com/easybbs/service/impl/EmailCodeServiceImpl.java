@@ -168,17 +168,22 @@ public class EmailCodeServiceImpl implements EmailCodeService {
                 throw new BusinessException("邮箱已经存在");
             }
         }
-
+        //生成验证码
         String code = StringTools.getRandomNumber(Constants.LENGTH_5);
+
+        //判断是否需要发送验证码
         if (webConfig.getSendEmailCode() != null && webConfig.getSendEmailCode()) {
+            //需要发送的话九调用私有方法
             sendEmailCode(toEmail, code);
         }
+        //写入数据库
         emailCodeMapper.disableEmailCode(toEmail);
         EmailCode emailCode = new EmailCode();
         emailCode.setCode(code);
         emailCode.setEmail(toEmail);
         emailCode.setStatus(0);
         emailCode.setCreateTime(new Date());
+        //执行插入操作
         emailCodeMapper.insert(emailCode);
     }
 

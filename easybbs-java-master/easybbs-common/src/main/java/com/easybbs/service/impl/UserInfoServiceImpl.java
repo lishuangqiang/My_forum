@@ -198,28 +198,45 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public SessionWebUserDto login(String email, String password, String ip) {
+        //根据邮箱查询用户
         UserInfo userInfo = this.userInfoMapper.selectByEmail(email);
+        //判断密码是否正确
         if (null == userInfo || !userInfo.getPassword().equals(password)) {
             throw new BusinessException("账号或者密码错误");
         }
+        //判断用户是否被禁用
         if (UserStatusEnum.DISABLE.getStatus().equals(userInfo.getStatus())) {
             throw new BusinessException("账号已禁用");
         }
+
+        //构造用户实体
         UserInfo updateInfo = new UserInfo();
+        //更新上次登录时间
         updateInfo.setLastLoginTime(new Date());
+        //记录登录ip
         updateInfo.setLastLoginIp(ip);
+        //构造map类，通过ip地址查询用户位置
         Map<String, String> addressInfo = getIpAddress(ip);
+        //获取省份简称 pro
         String pro = addressInfo.get("pro");
+        //如果省份简称为空  如果查找不到省份的话，就设置为未知
         pro = StringTools.isEmpty(pro) ? Constants.PRO_UNKNOWN : pro;
+        //更新上次登录ip地址为pro
         updateInfo.setLastLoginIpAddress(pro);
+        //根据id更新用户
         this.userInfoMapper.updateByUserId(updateInfo, userInfo.getUserId());
+
+        //往返回实体类中设置属性
         SessionWebUserDto sessionWebUserDto = new SessionWebUserDto();
         sessionWebUserDto.setNickName(userInfo.getNickName());
         sessionWebUserDto.setProvince(pro);
         sessionWebUserDto.setUserId(userInfo.getUserId());
+
+        //如果用户是管理员的话
         if (!StringTools.isEmpty(webConfig.getAdminEmails()) && ArrayUtils.contains(webConfig.getAdminEmails().split(","), userInfo.getEmail())) {
             sessionWebUserDto.setAdmin(true);
         } else {
+            //如果用户不是管理员的话
             sessionWebUserDto.setAdmin(false);
         }
         return sessionWebUserDto;
@@ -244,10 +261,13 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void register(String email, String nickName, String password, String emailCode) {
+
+        //邮箱不能重复注册
         UserInfo userInfo = this.userInfoMapper.selectByEmail(email);
         if (null != userInfo) {
             throw new BusinessException("邮箱账号已经存在");
         }
+        //用户不能重命名
         UserInfo nickNameUser = this.userInfoMapper.selectByNickName(nickName);
         if (null != nickNameUser) {
             throw new BusinessException("昵称已经存在");
@@ -256,6 +276,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         //校验邮箱验证码
         emailCodeService.checkCode(email, emailCode);
 
+        //插入数据库
         String userId = StringTools.getRandomNumber(Constants.LENGTH_10);
         userInfo = new UserInfo();
         userInfo.setUserId(userId);
@@ -267,6 +288,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setTotalIntegral(0);
         userInfo.setCurrentIntegral(0);
         this.userInfoMapper.insert(userInfo);
+
+        //更新当前用户积分，新增原因为注册，新增五分
         updateUserIntegral(userId, UserIntegralOperTypeEnum.REGISTER, UserIntegralChangeTypeEnum.ADD.getChangeType(), 5);
 
 
@@ -284,15 +307,21 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void resetPwd(String email, String password, String emailCode) {
+        //查找用户信息
         UserInfo userInfo = this.userInfoMapper.selectByEmail(email);
+        //如果查找不到用户
         if (null == userInfo) {
             throw new BusinessException("邮箱账号不存在");
         }
+
         //校验邮箱验证码
         emailCodeService.checkCode(email, emailCode);
 
+        //更新用户密码
         UserInfo updateInfo = new UserInfo();
+        //MD5加密
         updateInfo.setPassword(StringTools.encodeByMD5(password));
+
         this.userInfoMapper.updateByEmail(updateInfo, email);
     }
 

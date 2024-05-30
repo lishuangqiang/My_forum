@@ -127,13 +127,7 @@ public class ForumArticleController extends BaseController {
         }
     }
 
-    /**
-     * @Description: 文章置顶
-     * @auther: 程序员老罗
-     * @date: 2023/1/10
-     * @param: [topType, articleId]
-     * @return: com.easybbs.entity.vo.ResponseVO
-     */
+
     @RequestMapping("/topArticle")
     @GlobalInterceptor(checkParams = true)
     public ResponseVO topArticle(@VerifyParam(required = true) Integer topType, @VerifyParam(required = true) String articleId) {
@@ -143,13 +137,7 @@ public class ForumArticleController extends BaseController {
         return getSuccessResponseVO(null);
     }
 
-    /**
-     * @Description: 审核文章
-     * @auther: 程序员老罗
-     * @date: 2023/1/10
-     * @param: [articleId]
-     * @return: com.easybbs.entity.vo.ResponseVO
-     */
+
     @RequestMapping("/auditArticle")
     @GlobalInterceptor(checkParams = true)
     public ResponseVO auditArticle(@VerifyParam(required = true) String articleIds) {
@@ -157,13 +145,7 @@ public class ForumArticleController extends BaseController {
         return getSuccessResponseVO(null);
     }
 
-    /**
-     * @Description: 获取所有评论
-     * @auther: 程序员老罗
-     * @date: 2023/1/10
-     * @param: [commentQuery]
-     * @return: com.easybbs.entity.vo.ResponseVO
-     */
+
     @RequestMapping("/loadComment")
     @GlobalInterceptor(checkParams = true)
     public ResponseVO loadComment(ForumCommentQuery commentQuery) {
@@ -172,13 +154,6 @@ public class ForumArticleController extends BaseController {
         return getSuccessResponseVO(forumCommentService.findListByPage(commentQuery));
     }
 
-    /**
-     * @Description: 获取文章评论
-     * @auther: 程序员老罗
-     * @date: 2023/1/10
-     * @param: [commentQuery]
-     * @return: com.easybbs.entity.vo.ResponseVO
-     */
     @RequestMapping("/loadComment4Article")
     @GlobalInterceptor(checkParams = true)
     public ResponseVO loadComment4Article(ForumCommentQuery commentQuery) {
@@ -189,13 +164,7 @@ public class ForumArticleController extends BaseController {
         return getSuccessResponseVO(forumCommentService.findListByParam(commentQuery));
     }
 
-    /**
-     * @Description: 删除评论
-     * @auther: 程序员老罗
-     * @date: 2023/1/10
-     * @param: [articleId, commentId]
-     * @return: com.easybbs.entity.vo.ResponseVO
-     */
+
     @RequestMapping("/delComment")
     @GlobalInterceptor(checkParams = true)
     public ResponseVO delComment(@VerifyParam(required = true) String commentIds) {
@@ -203,13 +172,7 @@ public class ForumArticleController extends BaseController {
         return getSuccessResponseVO(null);
     }
 
-    /**
-     * @Description: 审核评论
-     * @auther: 程序员老罗
-     * @date: 2023/1/10
-     * @param: [articleId, commentId]
-     * @return: com.easybbs.entity.vo.ResponseVO
-     */
+
     @RequestMapping("/auditComment")
     @GlobalInterceptor(checkParams = true)
     public ResponseVO auditComment(@VerifyParam(required = true) String commentIds) {

@@ -222,13 +222,7 @@ public class OperationAspect {
         }
     }
 
-    /**
-     * @Description: 参数校验，后端参数校验 防小人不妨君子，前端已经做了参数校验，绕过前端，后端校验，一律返回 请求参数不正确
-     * @auther: 程序员老罗
-     * @date: 2022/11/22
-     * @param: [m, arguments]
-     * @return: void
-     */
+
     private void validateParams(Method m, Object[] arguments) throws BusinessException {
         Parameter[] parameters = m.getParameters();
         for (int i = 0; i < parameters.length; i++) {

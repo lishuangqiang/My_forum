@@ -24,6 +24,10 @@ public interface EmailCodeMapper<T, P> extends BaseMapper<T, P> {
      */
     T selectByEmailAndCode(@Param("email") String email, @Param("code") String code);
 
+    /**
+     * 删除验证码
+     * @param email
+     */
     void disableEmailCode(@Param("email") String email);
 
 }

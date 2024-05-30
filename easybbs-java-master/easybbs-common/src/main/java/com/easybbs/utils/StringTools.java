@@ -9,10 +9,20 @@ import java.util.regex.Pattern;
 
 public class StringTools {
 
+    /**
+     * 使用md5进行加密字符串
+     * @param originString
+     * @return
+     */
     public static String encodeByMD5(String originString) {
         return StringTools.isEmpty(originString) ? null : DigestUtils.md5Hex(originString);
     }
 
+    /**
+     * 进行判空
+     * @param str
+     * @return
+     */
     public static boolean isEmpty(String str) {
 
         if (null == str || "".equals(str) || "null".equals(str) || "\u0000".equals(str)) {
@@ -23,25 +33,50 @@ public class StringTools {
         return false;
     }
 
+    /**
+     *获得文件夹
+     * @param fileName
+     * @return
+     */
     public static String getFileSuffix(String fileName) {
         String suffix = fileName.substring(fileName.lastIndexOf("."));
         return suffix;
     }
 
+    /**
+     * 获取文件名（截取后缀）
+     * @param fileName
+     * @return
+     */
     public static final String getFileName(String fileName) {
         fileName = fileName.substring(0, fileName.lastIndexOf("."));
         return fileName;
     }
 
+    /**
+     * 生成指定位数的字符串
+     * @param count
+     * @return
+     */
     public static final String getRandomString(Integer count) {
         return RandomStringUtils.random(count, true, true);
     }
 
+    /**
+     * 生成指定位数的随机数
+     * @param count
+     * @return
+     */
     public static final String getRandomNumber(Integer count) {
         return RandomStringUtils.random(count, false, true);
     }
 
 
+    /**
+     * 防止标签注入
+     * @param content
+     * @return
+     */
     public static String escapeTitle(String content) {
         if (isEmpty(content)) {
             return content;
@@ -50,6 +85,11 @@ public class StringTools {
         return content;
     }
 
+    /**
+     *获得文本，过滤html内容
+     * @param content
+     * @return
+     */
     public static String escapeHtml(String content) {
         if (isEmpty(content)) {
             return content;
@@ -60,6 +100,11 @@ public class StringTools {
         return content;
     }
 
+    /**
+     * 删除html标签
+     * @param htmlStr
+     * @return
+     */
     public static String delHTMLTag(String htmlStr) {
         if (StringTools.isEmpty(htmlStr)) {
             return htmlStr;

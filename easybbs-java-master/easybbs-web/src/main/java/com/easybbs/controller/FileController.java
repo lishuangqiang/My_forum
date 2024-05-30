@@ -46,13 +46,7 @@ public class FileController extends BaseController {
     @Resource
     private WebConfig webConfig;
 
-    /**
-     * @Description: 件上传
-     * @auther: 程序员老罗
-     * @date: 2021/1/30
-     * @param: [file]
-     * @return: com.easypay.entity.vo.AjaxResponseVO
-     */
+
     @RequestMapping("uploadImage")
     @GlobalInterceptor(checkLogin = true, frequencyType = UserOperFrequencyTypeEnum.IMAGE_UPLAOD)
     public ResponseVO uploadImage(MultipartFile file) {

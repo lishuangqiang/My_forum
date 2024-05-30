@@ -59,7 +59,13 @@ public interface EmailCodeService {
      */
     Integer deleteEmailCodeByEmailAndCode(String email, String code);
 
+    /**
+     * 发送邮箱验证码
+     */
     void sendEmailCode(String toEmail, Integer type);
 
+    /**
+     * 校验邮箱验证码
+     */
     void checkCode(String email, String code);
 }
