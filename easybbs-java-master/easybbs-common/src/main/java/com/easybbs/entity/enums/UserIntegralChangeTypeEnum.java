@@ -1,6 +1,8 @@
 package com.easybbs.entity.enums;
 
-
+/**
+ * 积分更新枚举（1：增加，-1减少）
+ */
 public enum UserIntegralChangeTypeEnum {
     ADD(1, "增加"),
     REDUCE(-1, "减少");

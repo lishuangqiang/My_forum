@@ -222,6 +222,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         //如果省份简称为空  如果查找不到省份的话，就设置为未知
         pro = StringTools.isEmpty(pro) ? Constants.PRO_UNKNOWN : pro;
         //更新上次登录ip地址为pro
+        //拿ip用于评论区回显地区
         updateInfo.setLastLoginIpAddress(pro);
         //根据id更新用户
         this.userInfoMapper.updateByUserId(updateInfo, userInfo.getUserId());
@@ -242,10 +243,16 @@ public class UserInfoServiceImpl implements UserInfoService {
         return sessionWebUserDto;
     }
 
+    /**
+     * 根据ip获取用户省份
+     * @param ip
+     * @return
+     */
     public Map<String, String> getIpAddress(String ip) {
         Map<String, String> addressInfo = new HashMap<>();
         try {
             String url = "http://whois.pconline.com.cn/ipJson.jsp?json=true&ip=" + ip;
+
             String responseJson = OKHttpUtils.getRequest(url);
             if (StringTools.isEmpty(responseJson)) {
                 return addressInfo;
@@ -325,27 +332,43 @@ public class UserInfoServiceImpl implements UserInfoService {
         this.userInfoMapper.updateByEmail(updateInfo, email);
     }
 
+
+    /**
+     * 更新用户积分
+     * @param userId
+     * @param operTypeEnum
+     * @param changeType
+     * @param integral
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUserIntegral(String userId, UserIntegralOperTypeEnum operTypeEnum, Integer changeType, Integer integral) {
+
+        //积分等于修改类型（新增：1，减少：-1） * 分数
         integral = changeType * integral;
 
+        //如果积分为空
         if (integral == 0) {
             return;
         }
-
+        //查找用户
         UserInfo userInfo = userInfoMapper.selectByUserId(userId);
+        //如果更新积分的状态是减少，并且用户当前积分+ 待修改后的积分小于0
         if (UserIntegralChangeTypeEnum.REDUCE.getChangeType().equals(changeType) && userInfo.getCurrentIntegral() + integral < 0) {
+            //因为我们不能把用户的积分剪成负数，所以如果用户当前积分+ 待修改后的积分小于0，那么就让用户的待减分数等于当前分数就好了，这样就直接减为0了
             integral = changeType * userInfo.getCurrentIntegral();
         }
 
+        //构造用户积分记录类
         UserIntegralRecord record = new UserIntegralRecord();
+        //给参数赋值
         record.setUserId(userId);
         record.setOperType(operTypeEnum.getOperType());
         record.setCreateTime(new Date());
         record.setIntegral(integral);
+        //插入到积分记录表中
         this.userIntegralRecordMapper.insert(record);
-
+        //从用户表中更新用户积分
         Integer count = this.userInfoMapper.updateIntegral(userId, integral);
         if (count == 0) {
             throw new BusinessException("更新用户积分失败");

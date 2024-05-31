@@ -8,7 +8,9 @@ import com.easybbs.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JsonUtils {
     private static final Logger logger = LoggerFactory.getLogger(JsonUtils.class);
@@ -17,6 +19,14 @@ public class JsonUtils {
         return JSON.toJSONString(obj);
     }
 
+    /**
+     * 把json格式的字符串转化成为对象
+     * @param json
+     * @param classz
+     * @return
+     * @param <T>
+     * @throws BusinessException
+     */
     public static <T> T convertJson2Obj(String json, Class<T> classz) throws BusinessException {
         try {
             return JSONObject.parseObject(json, classz);
@@ -26,6 +36,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * 把json数组转化为一个List集合
+     * @param json
+     * @param classz
+     * @return
+     * @param <T>
+     * @throws BusinessException
+     */
     public static <T> List<T> convertJsonArray2List(String json, Class<T> classz) throws BusinessException {
         try {
             return JSONArray.parseArray(json, classz);
@@ -36,5 +54,6 @@ public class JsonUtils {
     }
 
     public static void main(String[] args) {
+
     }
 }

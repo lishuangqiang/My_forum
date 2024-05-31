@@ -1,5 +1,8 @@
 package com.easybbs.entity.enums;
 
+/**
+ * 响应码枚举
+ */
 public enum ResponseCodeEnum {
     CODE_200(200, "请求成功"),
     CODE_404(404, "请求地址不存在"),

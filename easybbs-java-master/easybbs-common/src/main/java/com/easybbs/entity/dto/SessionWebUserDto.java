@@ -1,5 +1,8 @@
 package com.easybbs.entity.dto;
 
+/**
+ * 用户设置
+ */
 public class SessionWebUserDto {
     private String nickName;
     private String province;

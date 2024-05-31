@@ -1,5 +1,8 @@
 package com.easybbs.entity.enums;
 
+/**
+ * 文章三连枚举
+ */
 public enum UpdateArticleCountTypeEnum {
     READ_COUNT(0, "阅读数"),
     GOOD_COUNT(1, "点赞数"),

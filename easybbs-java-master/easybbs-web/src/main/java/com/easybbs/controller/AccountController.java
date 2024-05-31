@@ -202,19 +202,19 @@ public class AccountController extends BaseController {
     }
 
 
-    /**
-     * 获得设置
-     * @return
-     */
-    @RequestMapping("/getSysSetting")
-    @GlobalInterceptor()
-    public ResponseVO getSysSetting() {
+        /**
+         * 获得设置
+         * @return
+         */
+        @RequestMapping("/getSysSetting")
+        @GlobalInterceptor()
+        public ResponseVO getSysSetting() {
         SysSetting4CommentDto commentDto = SysCacheUtils.getSysSetting().getCommentSetting();
         Boolean commentOpen = commentDto == null ? true : commentDto.getCommentOpen();
         SysSettingVO sysSettingVO = new SysSettingVO();
         sysSettingVO.setCommentOpen(commentOpen);
         return getSuccessResponseVO(sysSettingVO);
-    }
+        }
 
 
-}
+        }

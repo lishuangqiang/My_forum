@@ -2,6 +2,9 @@ package com.easybbs.entity.dto;
 
 import com.easybbs.annotation.VerifyParam;
 
+/**
+ * 邮件标题
+ */
 public class SysSetting4EmailDto {
 
     //邮件标题

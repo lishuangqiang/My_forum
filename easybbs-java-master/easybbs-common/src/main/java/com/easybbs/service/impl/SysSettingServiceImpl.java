@@ -1,5 +1,7 @@
 package com.easybbs.service.impl;
 
+import com.easybbs.entity.dto.SysSetting4AuditDto;
+import com.easybbs.entity.dto.SysSetting4CommentDto;
 import com.easybbs.entity.dto.SysSettingDto;
 import com.easybbs.entity.enums.PageSize;
 import com.easybbs.entity.enums.SysSettingCodeEnum;
@@ -138,24 +140,45 @@ public class SysSettingServiceImpl implements SysSettingService {
         }
     }
 
+    /**
+     * 刷新缓存
+     * @return
+     */
     @Override
     public SysSettingDto refreshCache() {
         try {
+            //构造查询条件在数据库中查询设置
             SysSettingDto sysSettingDto = new SysSettingDto();
             List<SysSetting> list = this.sysSettingMapper.selectList(new SysSettingQuery());
+
+            /**
+             * 通过枚举类来动态的获取字段
+             */
             Class classz = SysSettingDto.class;
+            //遍历查询好的list
             for (SysSetting setting : list) {
+                //获取json格式的内容
                 String jsonContent = setting.getJsonContent();
                 if (StringTools.isEmpty(jsonContent)) {
                     continue;
                 }
+               //获取系统设置的编码
                 String code = setting.getCode();
+                //根据编码拿到对应的枚举值
                 SysSettingCodeEnum codeEnum = SysSettingCodeEnum.getByCode(code);
+
+                //使用 PropertyDescriptor 动态获取 SysSettingDto 类中与枚举值关联的属性的setter方法
                 PropertyDescriptor pd = new PropertyDescriptor(codeEnum.getPropName(), classz);
                 Method method = pd.getWriteMethod();
+
+                // Class 对象 subClassZ 表示了JSON内容将要被转换成的具体类类型
                 Class subClassZ = Class.forName(codeEnum.getClassZ());
+
+
+                //先通过convertJson2Obj 将对应的json内容读取出来，转换成classZ类型的。之后再通过反射的放法动态地将JSON字符串中的数据映射到 SysSettingDto 对象的相应属性上。
                 method.invoke(sysSettingDto, JsonUtils.convertJson2Obj(setting.getJsonContent(), subClassZ));
             }
+            //将从数据库中的数据刷新到实体类中
             SysCacheUtils.refresh(sysSettingDto);
             return sysSettingDto;
         } catch (Exception e) {
@@ -163,4 +186,44 @@ public class SysSettingServiceImpl implements SysSettingService {
             throw new BusinessException("刷新缓存失败");
         }
     }
+
+/**
+ * 学弟写法，list遍历赋值。效率太低。
+ * 修改为上方的定义枚举类之后通过反射进行动态赋值
+ * 优点就是如果有新的配置，我们直接在枚举类中新增一个字段就好了，不需要在代码中进行繁琐的取值
+  */
+
+
+//    /**
+//     * 刷新缓存
+//     * @return
+//     */
+//    @Override
+//    public SysSettingDto refreshCache() {
+//        try {
+//            //构造查询条件在数据库中查询设置
+//            SysSettingDto sysSettingDto = new SysSettingDto();
+//            List<SysSetting> list = this.sysSettingMapper.selectList(new SysSettingQuery());
+//
+//
+//            Class classz = SysSettingDto.class;
+//            //遍历查询好的list
+//            for (SysSetting setting : list) {
+//              if(setting.getCode().equals("audit")){
+//                  SysSetting4AuditDto auditDto = JsonUtils.convertJson2Obj(setting.getJsonContent(), SysSetting4AuditDto.class);
+//                  sysSettingDto.setAuditStting(auditDto);
+//              }
+//                if(setting.getCode().equals("comment")){
+//                    SysSetting4CommentDto commentDto = JsonUtils.convertJson2Obj(setting.getJsonContent(), SysSetting4CommentDto.class);
+//                    sysSettingDto.setAuditStting(commentDto);
+//                }
+//            }
+//            //将从数据库中的数据刷新到实体类中
+//            SysCacheUtils.refresh(sysSettingDto);
+//            return sysSettingDto;
+//        } catch (Exception e) {
+//            logger.error("刷新缓存失败", e);
+//            throw new BusinessException("刷新缓存失败");
+//        }
+//    }
 }

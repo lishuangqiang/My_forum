@@ -2,6 +2,9 @@ package com.easybbs.entity.dto;
 
 import com.easybbs.annotation.VerifyParam;
 
+/**
+ * 发帖设置
+ */
 public class SysSetting4PostDto {
     /**
      * 发帖积分

@@ -2,6 +2,9 @@ package com.easybbs.entity.dto;
 
 import com.easybbs.annotation.VerifyParam;
 
+/**
+ * 评论设置
+ */
 public class SysSetting4CommentDto {
     /**
      * 评论积分

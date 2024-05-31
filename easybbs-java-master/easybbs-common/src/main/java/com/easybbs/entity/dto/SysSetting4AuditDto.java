@@ -2,6 +2,9 @@ package com.easybbs.entity.dto;
 
 import com.easybbs.annotation.VerifyParam;
 
+/**
+ * 帖子设置
+ */
 public class SysSetting4AuditDto {
     /**
      * 帖子是否需要审核

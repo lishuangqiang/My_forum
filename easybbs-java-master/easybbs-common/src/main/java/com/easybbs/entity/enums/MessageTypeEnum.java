@@ -1,5 +1,8 @@
 package com.easybbs.entity.enums;
 
+/**
+ * 消息类型枚举
+ */
 public enum MessageTypeEnum {
     SYS(0, "sys", "系统消息"),
     COMMENT(1, "reply", "回复我的"),

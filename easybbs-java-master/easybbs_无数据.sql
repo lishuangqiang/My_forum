@@ -224,7 +224,7 @@ CREATE TABLE `user_message` (
 
 INSERT INTO `sys_setting` VALUES ('audit', '{\"commentAudit\":false,\"postAudit\":false}');
 INSERT INTO `sys_setting` VALUES ('comment', '{\"commentDayCountThreshold\":50,\"commentIntegral\":1,\"commentOpen\":true}');
-INSERT INTO `sys_setting` VALUES ('email', '{\"emailContent\":\"你好，您的邮箱验证码是：%s，15分钟有效\",\"emailTitle\":\"邮箱验证码--EasyBBS\"}');
+INSERT INTO `sys_setting` VALUES ('email', '{\"emailContent\":\"你好，您的邮箱验证码是：%s，15分钟有效\",\"emailTitle\":\"邮箱验证码--西柚论坛\"}');
 INSERT INTO `sys_setting` VALUES ('like', '{\"likeDayCountThreshold\":50}');
 INSERT INTO `sys_setting` VALUES ('post', '{\"attachmentSize\":1,\"dayImageUploadCount\":50,\"postDayCountThreshold\":50,\"postIntegral\":1}');
 INSERT INTO `sys_setting` VALUES ('register', '{\"registerWelcomInfo\":\"社区欢迎你，以后的日子里，有西邮陪伴你一起学编程\"}');

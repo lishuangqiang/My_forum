@@ -2,6 +2,9 @@ package com.easybbs.entity.dto;
 
 import com.easybbs.annotation.VerifyParam;
 
+/**
+ * 点赞设置
+ */
 public class SysSetting4LikeDto {
     /**
      * 点赞数量阈值

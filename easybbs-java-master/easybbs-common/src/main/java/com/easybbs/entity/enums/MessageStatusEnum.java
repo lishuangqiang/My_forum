@@ -1,5 +1,8 @@
 package com.easybbs.entity.enums;
 
+/**
+ * 消息状态枚举
+ */
 public enum MessageStatusEnum {
     NO_READ(1, "未读"),
     READ(2, "已读");

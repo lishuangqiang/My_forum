@@ -2,6 +2,9 @@ package com.easybbs.entity.dto;
 
 import com.easybbs.annotation.VerifyParam;
 
+/**
+ * 注册设置
+ */
 public class SysSetting4RegisterDto {
 
     //注册欢迎语

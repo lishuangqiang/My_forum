@@ -1,5 +1,8 @@
 package com.easybbs.entity.enums;
 
+/**
+ * 系统设置枚举
+ */
 public enum SysSettingCodeEnum {
     AUDIT("audit", "com.easybbs.entity.dto.SysSetting4AuditDto", "auditStting", "审核设置"),
     COMMENT("comment", "com.easybbs.entity.dto.SysSetting4CommentDto", "commentSetting", "评论设置"),
