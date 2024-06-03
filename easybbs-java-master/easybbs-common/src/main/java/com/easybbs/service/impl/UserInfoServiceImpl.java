@@ -416,7 +416,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 changeTypeEnum = UserIntegralChangeTypeEnum.REDUCE;
             }
             updateUserIntegral(userId, UserIntegralOperTypeEnum.ADMIN, changeTypeEnum.getChangeType(), integral);
-            dashjkdashj
+
         }
     }
 }
